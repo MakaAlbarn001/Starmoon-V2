@@ -5,3 +5,10 @@ Project Starmoon Version 2 Change Log. Please record changes made to the project
     the i386 architecture. Also added a blank 'boot.s' file in arch/i386 for building up
     the bootsector of the kernel.
     Timothy Gonzales "firebug98@gmail.com"
+
+10/30/2021: Filled in the multiboot header, created a new stack, and set up the stack 
+    frames for stack tracing. Also built up a preliminary linker script for the i386
+    ELF format. Added a stack trace function for debugging once interrupts are enabled.
+    Created an explicit heap location to be aligned on a page boundary, as will the stack.
+    Included the global con/destructor crtX.s files for initializing global classes.
+    Timothy Gonzles "firebug98@gmail.com"
