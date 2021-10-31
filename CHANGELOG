@@ -1,0 +1,7 @@
+Project Starmoon Version 2 Change Log. Please record changes made to the project such
+    as additions and modifications with an attached date and signature.
+
+10/30/2021: Created the project, initial project directory tree, and blank scripts for
+    the i386 architecture. Also added a blank 'boot.s' file in arch/i386 for building up
+    the bootsector of the kernel.
+    Timothy Gonzales "firebug98@gmail.com"
