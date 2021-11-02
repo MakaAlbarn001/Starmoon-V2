@@ -11,4 +11,10 @@ Project Starmoon Version 2 Change Log. Please record changes made to the project
     ELF format. Added a stack trace function for debugging once interrupts are enabled.
     Created an explicit heap location to be aligned on a page boundary, as will the stack.
     Included the global con/destructor crtX.s files for initializing global classes.
-    Timothy Gonzles "firebug98@gmail.com"
+    Timothy Gonzales "firebug98@gmail.com"
+
+10/31/2021: Created basic GDT and functions for filling the GDT and LDT. Created main()
+    function for the platform-independent kernel.o. Set up basic Makefile scripts for
+    building the kernel. Note: Add to the Makefiles as features and components are
+    added.
+    Timothy Gonzales "firebug98@gmail.com"
