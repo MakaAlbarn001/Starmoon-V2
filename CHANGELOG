@@ -18,3 +18,9 @@ Project Starmoon Version 2 Change Log. Please record changes made to the project
     building the kernel. Note: Add to the Makefiles as features and components are
     added.
     Timothy Gonzales "firebug98@gmail.com"
+
+11/4/2021: Added some libc stuff that had been previously worked out, and implemented
+    text-mode VGA for the kernel in 80x25 16-color mode. Plan to fully document new
+    additions over the next couple days. Then will work on setting up interrupts and
+    some processor features.
+    Timothy Gonzales "firebug98@gmail.com"

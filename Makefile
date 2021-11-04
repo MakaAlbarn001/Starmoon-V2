@@ -22,14 +22,17 @@ i686: .EXPORT_ALL_VARIABLES
 i686:
 	$(MAKE) -C arch
 	$(MAKE) -C kernel
-	$(GPP) -T scripts/$(ARCH).ld -Wl,-Map=$@.map -o $@ $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) arch/crt0.o arch/crti.o $(CRTBEGIN_OBJ) \
-	kernel/kernel.o arch/arch.o $(CRTEND_OBJ) arch/crtn.o -lgcc
+	$(MAKE) -C lib
+	$(CC) -T scripts/$(ARCH).ld -Wl,-Map=$@.map -o $@ $(CFLAGS) $(CPPFLAGS) arch/crt0.o arch/crti.o $(CRTBEGIN_OBJ) \
+	kernel/kernel.o arch/arch.o $(CRTEND_OBJ) arch/crtn.o $(LDFLAGS) -L$(LIBDIR) -lc -lgcc
 	$(OBJCOPY) --only-keep-debug $@ $@.dbg
 
 .phony: clean
 clean:
 	rm -rf *.o
 	$(MAKE) clean -C arch
+	$(MAKE) clean -C kernel
+	$(MAKE) clean -C lib
 	rm -rf i686
 	rm -rf *.map
 	rm -rf *.dbg
