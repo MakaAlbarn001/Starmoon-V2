@@ -24,3 +24,7 @@ Project Starmoon Version 2 Change Log. Please record changes made to the project
     additions over the next couple days. Then will work on setting up interrupts and
     some processor features.
     Timothy Gonzales "firebug98@gmail.com"
+
+11/9/2021: Fully commented all source code throughout the project. Started work on 
+    adding interrupt support of vectors 0-31. 
+    Timothy Gonzales "firebug98@gmail.com

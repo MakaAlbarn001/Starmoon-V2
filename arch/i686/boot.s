@@ -49,21 +49,22 @@ loop:                                   # Create a loop point for idle.
 
 .global gdt_flush
 .extern gp
+#   flushes the gdt with new segments.
 gdt_flush:
-    push %ebp
-    mov %esp, %ebp
-    lgdt (gp)
-    mov $0x10, %ax
-    mov %ax, %fs
-    mov %ax, %ds
-    mov %ax, %es
-    mov %ax, %gs
-    mov %ax, %ss
-    jmp $0x8,$flush_seg
+    push %ebp               # maintain the stack frame by pushing the previous function's ebp
+    mov %esp, %ebp          # set the current function's ebp
+    lgdt (gp)               # load the GDT location into the GDTR
+    mov $0x10, %ax          # set %eax to the ring-0 data segment pointer
+    mov %ax, %fs            # the the ds,es,fs,gs, and ss segment selectors to the data segment
+    mov %ax, %ds            # 
+    mov %ax, %es            # 
+    mov %ax, %gs            # 
+    mov %ax, %ss            # 
+    jmp $0x8,$flush_seg     # jump into the code segment with a far jump to the ring-0 code seg pointer
 flush_seg:
-    mov %ebp, %esp
-    pop %ebp
-    ret
+    mov %ebp, %esp          # clear any local variables and data on the stack
+    pop %ebp                # restore the calling functions ebp
+    ret                     # return
 
 .section .bss                             # Align the stack on a 4KB page boundary
 stack_bottom:

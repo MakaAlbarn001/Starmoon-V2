@@ -7,6 +7,10 @@ long int atol(const char *nptr)
     long int result = 0;
     bool neg = false;
     size_t i = 0;
+    while(isspace(nptr[i]))
+    {
+        i++;                                    
+    }
     if(nptr[i] == '-')
     {
         neg = true;

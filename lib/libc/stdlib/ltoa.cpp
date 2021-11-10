@@ -2,10 +2,25 @@
 #include <string.h>
 #include "lib.h"
 
+/************************************************************
+ * ltoa():                                                  *
+ *  arguments:                                              *
+ *      long integer: num                                   *
+ *      character pointer: str                              *
+ *      integer: base                                       *
+ *                                                          *
+ *  return type: character pointer                          *
+ *                                                          *
+ *  function:                                               *
+ *      converts num into a c-style string in the given     *
+ *      base.                                               *
+ *                                                          *
+ *  NOTE: see itoa() for line by line                       *
+ ************************************************************/
 char *ltoa(long int num, char *str, int base)
 {
 #if __SIZEOF_INT__ == __SIZEOF_LONG__
-    return itoa(num, str, base);
+    return itoa(num, str, base);            // run if long and int are the same size.
 #else
 #if !__STDC_HOSTED__
     memset(str, '\0', sizeof(long int) * 8 + 1);

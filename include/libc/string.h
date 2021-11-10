@@ -10,10 +10,10 @@
 extern "C" {
 #endif
 
-int strlen(const char* str);
+size_t strlen(const char* str);
 void strrev(char* str);
 char *strchr(const char *str, int ch);
-char *strpbrk(const char  * dest, const char *breakset);
+char *strpbrk(const char  * str1, const char *str2);
 
 void* memset(void *dest, int ch, size_t count);
 void* memmove(void *dest, const void *src, size_t count);

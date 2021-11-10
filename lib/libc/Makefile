@@ -3,6 +3,7 @@ export LIBC_INCLUDE :=-I$(INCDIR)/libc
 libc.a: core.o string.o stdio.o stdlib.o ctype.o
 	$(AR) rcs $@ $^
 	mv $@ ..
+	rm *.o
 	
 core.o: core.cpp
 	$(GPP) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -I$(INCDIR) $(LIBC_INCLUDE) -c $^ -o $@
