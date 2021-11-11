@@ -61,6 +61,7 @@ unsigned char inportb(unsigned short port)
  ********************************************/
 extern "C" void main() {
     set_basic_gdt();                    // set up a basic gdt
+    install_IDT();
     terminal_init();                    // initialize the VGA text terminal
     printf("hello\n");                  // print a test message to screen.
     for(;;);                            // begin the idle for loop.

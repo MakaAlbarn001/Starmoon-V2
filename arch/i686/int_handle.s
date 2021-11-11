@@ -166,4 +166,54 @@ isr31:
     pushl $31
     jmp fault_stub
 
+/************************************************
+ * fault_stub():                                *
+ *  arguements: none                            *
+ *  return type: none(interrupt)                *
+ *  function:                                   *
+ *      A universal stub to provide extra       *
+ *      information to the interrupt handler    *
+ *      to resolve interrupts.                  *
+ ************************************************/
+.extern fault_handler
 fault_stub:
+    pusha                       # push all of the current registers
+    pushl %ds                    # push the data segment selector
+    pushl %es                    # push the extra segment selector
+    pushl %fs                    # push the first bonus segment selector
+    pushl %gs                    # push the second bonus segment selector
+    mov $0x10, %ax              # set ax to the segment offset for the kernel data segment
+    mov %ax, %ds                # set ds, es, fs, and gs to the offset in ax
+    mov %ax, %es
+    mov %ax, %fs
+    mov %ax, %gs
+    mov %esp, %eax              # set eax to the current stack pointer
+    # push the value in eax onto the stack, creating a pointer to the interrupt information structure
+    push %eax                   
+    mov $fault_handler, %eax    # set eax to the memory address of the actual fault handler
+    call *%eax                  # call the function address in eax
+    pop %eax                    # pop the top of the stack into eax
+    popl %gs                     # pop the second bonus segment selector
+    popl %fs                     # pop the first bonus segment selector
+    popl %es                     # pop the extra segment selector
+    popl %ds                     # pop the data segment selector
+    popa                        # pop all of the registers
+    add $8, %esp                # removes the interrupt number and error code from the stack
+    iret                        # preform an interrupt return to resume normal function
+
+/************************************
+ * idt_flush():                     *
+ *  loads the idt pointer into the  *
+ *      idtr with the lidt          *
+ *      instruction                 *
+ ************************************/
+.global idt_flush
+.type idt_flush, @function
+.extern idtp
+idt_flush:
+    push %ebp
+    mov %esp, %ebp              // maintain the stack framm
+    lidt (idtp)                 // load the idtp into idtr
+    mov %ebp, %esp              // back step the stack frame
+    pop %ebp
+    ret

@@ -17,6 +17,6 @@
 #define VGA_COLOR_WHITE 0xF
 #endif
 
-void static inline set_text_color(unsigned char foreground, unsigned char background);
+void inline set_text_color(unsigned char foreground, unsigned char background);
 void kputchar(int ch);
 void terminal_init();

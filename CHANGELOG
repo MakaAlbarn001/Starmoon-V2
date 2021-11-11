@@ -28,3 +28,8 @@ Project Starmoon Version 2 Change Log. Please record changes made to the project
 11/9/2021: Fully commented all source code throughout the project. Started work on 
     adding interrupt support of vectors 0-31. 
     Timothy Gonzales "firebug98@gmail.com
+
+11/10/2021: Implemented core interrupts for CPU exceptions. Interrupt vectors 0-31
+    are coded and an lock-up fault handler has been integrated.
+    Will work on paging and malloc/free().
+    Timothy Gonzales "firebug98@gmail.com"

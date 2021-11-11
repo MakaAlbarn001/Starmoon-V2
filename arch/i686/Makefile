@@ -19,4 +19,4 @@ arch.o: $(CRTOBJ) $(ARCHOBJ) $(CPPOBJ)
 	$(AS) $< -o $@
 
 %.o: %.cpp
-	$(GPP) -I$(INCDIR) $(CFLAGS) $(CPPFLAGS) -c $^ -o $@
+	$(GPP) -I$(INCDIR) $(CFLAGS) $(LDFLAGS) $(CPPFLAGS) -c $^ -o $@

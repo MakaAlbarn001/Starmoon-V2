@@ -68,10 +68,9 @@ flush_seg:
 
 .section .bss                             # Align the stack on a 4KB page boundary
 stack_bottom:
-.skip 4096                              # Sets the size of the stack
+.skip 16384                              # Sets the size of the stack
 stack_top:
-.section .bss_heap
 .align 4096                             # Align the heap on a 4KB page boundary
 heap_begin:
-.skip 4096                              # Set the size of the heap
+.skip 16384                              # Set the size of the heap
 heap_end:
