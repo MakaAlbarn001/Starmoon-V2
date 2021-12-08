@@ -9,7 +9,8 @@ SECTIONS {
     .rodata : {
         *(.rodata)
     }
-    .data : {
+    KERNEL_DATA = .;
+    .data : ALIGN(4K) {
         *(.data)
     }
     .bss : ALIGN(4K){
@@ -18,4 +19,5 @@ SECTIONS {
         *(.bss)
         _ebss = .;
     }
+    KERNEL_END = .;
 }

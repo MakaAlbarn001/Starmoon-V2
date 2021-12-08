@@ -1,6 +1,8 @@
 #ifndef _STDLIB_H
 #define _STDLIB_H 1
 
+#include <stddef.h>
+
 #pragma once
 
 #ifdef __cplusplus
@@ -14,6 +16,9 @@ char *lltoa(long long int num, char *str, int base);
 int atoi(const char *nptr);
 long int atol(const char *nptr);
 long long int atoll(const char *nptr);
+
+void *malloc(size_t size);
+void free(void *addr);
 
 #ifdef __cplusplus
 }

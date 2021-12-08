@@ -34,9 +34,13 @@ _start:
     push %ebp                           # Set the stack frame terminator.
 
     call _init                          # Call the global constructors
+
+    push $page_tables                   # push the address of the starter page tables
+    call setup_paging                   # build the init page tables
+
     /* push the heap beginning and end onto the stack. */
-    push $heap_begin
     push $heap_end
+    push $heap_begin
 
     call main
 
@@ -46,6 +50,15 @@ loop:                                   # Create a loop point for idle.
 
     call _fini                          # Call the global destructors
 
+.global init_paging
+# initialize the paging system on the processor
+init_paging:
+    mov $page_tables, %eax              // move the location of the page tables into eax
+    mov %eax, %cr3                      // copy the contents of eax into cr3
+    mov %cr0, %eax                      // copy the contents of cr0 into eax
+    or %eax, 0x80000001                 // ensure the PG and PE bits are set in cr0
+    mov %eax, %cr0                      // copy the contents of eax into cr0
+    ret                                 // return
 
 .global gdt_flush
 .extern gp
@@ -55,7 +68,7 @@ gdt_flush:
     mov %esp, %ebp          # set the current function's ebp
     lgdt (gp)               # load the GDT location into the GDTR
     mov $0x10, %ax          # set %eax to the ring-0 data segment pointer
-    mov %ax, %fs            # the the ds,es,fs,gs, and ss segment selectors to the data segment
+    mov %ax, %fs            # set the ds,es,fs,gs, and ss segment selectors to the data segment
     mov %ax, %ds            # 
     mov %ax, %es            # 
     mov %ax, %gs            # 
@@ -71,6 +84,9 @@ stack_bottom:
 .skip 16384                              # Sets the size of the stack
 stack_top:
 .align 4096                             # Align the heap on a 4KB page boundary
+page_tables:
+.skip 16384                             # Create space for the paging tables.
+.align 4096
 heap_begin:
 .skip 16384                              # Set the size of the heap
 heap_end:

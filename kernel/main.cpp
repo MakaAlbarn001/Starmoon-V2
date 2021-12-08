@@ -2,6 +2,7 @@
 #include <kernel/system.h>
 #include <kernel/tty.h>
 #include <libc/stdio.h>
+#include <kernel/paging.h>
 
 /********************************************
  * outportb():                              *

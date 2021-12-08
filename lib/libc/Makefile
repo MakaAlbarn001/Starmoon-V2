@@ -21,4 +21,8 @@ ctype.o:
 	$(MAKE) --directory=ctype
 
 clean:
+	$(MAKE) clean --directory=stdlib
+	$(MAKE) clean --directory=string
+	$(MAKE) clean --directory=stdio
+	$(MAKE) clean --directory=ctype
 	rm -f *.o
