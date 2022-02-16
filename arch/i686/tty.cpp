@@ -139,8 +139,9 @@ void scroll()
         for(unsigned int y = 0; y < Y_MAX - 1; y++)         // for every row on the screen
         {
             // make each row a copy of the next row
-            memcpy(txtmemptr + (y * X_MAX), txtmemptr + ((y + 1) * X_MAX), X_MAX);
+            memmove(txtmemptr + (y * X_MAX), txtmemptr + ((y + 1) * X_MAX), 2 * X_MAX);
         }
+        memset(txtmemptr + (X_MAX * 24), 0, 2 * X_MAX);     // insure that the last line is clear.
         y_csr = 24;                                        // set the y position to 24, the last line on the screen.
     }
 }

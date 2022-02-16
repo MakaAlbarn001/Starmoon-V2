@@ -20,6 +20,8 @@ long long int atoll(const char *nptr);
 void *malloc(size_t size);
 void free(void *addr);
 
+void header_trace();
+
 #ifdef __cplusplus
 }
 #endif

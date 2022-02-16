@@ -11,7 +11,7 @@
  *                                                              *
  *  function:                                                   *
  ****************************************************************/
-void *memmove(void* dest, void* src, size_t count)
+void *memmove(void* dest, const void* src, size_t count)
 {
     unsigned char* dst = (unsigned char*)dest;                  // initialize a character pointer dst to dest
     if(src > dest)                                              // if the address of src is less than that of dest

@@ -37,10 +37,13 @@ _start:
 
     push $page_tables                   # push the address of the starter page tables
     call setup_paging                   # build the init page tables
+    add %esp, 4                         # clear the stack
 
     /* push the heap beginning and end onto the stack. */
     push $heap_end
     push $heap_begin
+    call initialize_standard_library        # call the standard library initializer
+    add %esp, 8                         # clear the stack
 
     call main
 
@@ -86,7 +89,8 @@ stack_top:
 .align 4096                             # Align the heap on a 4KB page boundary
 page_tables:
 .skip 16384                             # Create space for the paging tables.
+.section .heap
 .align 4096
 heap_begin:
-.skip 16384                              # Set the size of the heap
+.zero 16384                              # Set the size of the heap
 heap_end:

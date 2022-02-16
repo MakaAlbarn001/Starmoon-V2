@@ -26,6 +26,7 @@ i686:
 	$(CC) -T scripts/$(ARCH).ld -Wl,-Map=$@.map -o $@ $(CFLAGS) $(CPPFLAGS) arch/crt0.o arch/crti.o $(CRTBEGIN_OBJ) \
 	kernel/kernel.o arch/arch.o $(CRTEND_OBJ) arch/crtn.o $(LDFLAGS) -L$(LIBDIR) -lc -lgcc
 	$(OBJCOPY) --only-keep-debug $@ $@.dbg
+	hexdump -C $@ >> $@.hex
 
 .phony: clean
 clean:
@@ -36,6 +37,7 @@ clean:
 	rm -rf i686
 	rm -rf *.map
 	rm -rf *.dbg
+	rm -rf *.hex
 
 .phony: .EXPORT_ALL_VARIABLES
 .EXPORT_ALL_VARIABLES:
