@@ -1,6 +1,8 @@
 #include <kernel/system.h>
+#include <kernel/strace.h>
 #include <libc/stdio.h>
 #include "isr.h"
+#include "memloc.h"
 
 extern "C" void isr0();
 extern "C" void isr1();
@@ -35,6 +37,23 @@ extern "C" void isr29();
 extern "C" void isr30();
 extern "C" void isr31();
 
+extern "C" void irq0();
+extern "C" void irq1();
+extern "C" void irq2();
+extern "C" void irq3();
+extern "C" void irq4();
+extern "C" void irq5();
+extern "C" void irq6();
+extern "C" void irq7();
+extern "C" void irq8();
+extern "C" void irq9();
+extern "C" void irq10();
+extern "C" void irq11();
+extern "C" void irq12();
+extern "C" void irq13();
+extern "C" void irq14();
+extern "C" void irq15();
+
 extern "C" void idt_flush();
 
 struct idt_pointer
@@ -44,6 +63,32 @@ struct idt_pointer
 }__attribute__((packed));
 
 struct idt_pointer idtp;
+
+void *irq_routines[] = {
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0
+};
+
+/****************************************************
+ * irq_remap():                                     *
+ *  function:                                       *
+ *      Remaps IRQs 0-7 to interrupt vectors 32-40  *
+ *  Arguments: None                                 *
+ *  Return Type: Void                               *
+ ****************************************************/
+void irq_remap()
+{
+    outportb(PIC_MAS, 0x11);                        // Initialize the Master PIC in cascade mode
+    outportb(PIC_SLV, 0x11);                        // Initialize the Slave PIC in cascade mode
+    outportb(PIC_MAS+1, 0x20);                      // Set the vector offset for IRQs 0-7
+    outportb(PIC_SLV+1, 0x28);                      // Set the vector offset for IRQs 8-15
+    outportb(PIC_MAS+1, 0x04);                      // Set Master PIC cascade input pin
+    outportb(PIC_SLV+1, 0x02);                      // Set Slave PIC cascide identity
+    outportb(PIC_MAS+1, 0x01);                      // Set the Master PIC to 8086 Mode
+    outportb(PIC_SLV+1, 0x01);                      // Set the Slave PIC to 8086 Mode
+    outportb(PIC_MAS+1, 0x0);                       // Clear the masks in the PIC
+    outportb(PIC_SLV+1, 0x0);                       // Clear the masks in the PIC
+}
 
 /************************************************************
  * install_IDT():                                           *
@@ -89,7 +134,26 @@ void install_IDT()
     idt_set_gate(30,(void*)isr30,0x8E, 0x08);
     idt_set_gate(31,(void*)isr31,0x8E, 0x08);
     // fill the rest of the table will null descriptors
-    for(int i = 32; i < 256; i++)
+    idt_set_gate(32,(void*)irq0, 0x8E, 0x08);
+    idt_set_gate(33,(void*)irq1, 0x8E, 0x08);
+    idt_set_gate(34,(void*)irq2, 0x8E, 0x08);
+    idt_set_gate(35,(void*)irq3, 0x8E, 0x08);
+    idt_set_gate(36,(void*)irq4, 0x8E, 0x08);
+    idt_set_gate(37,(void*)irq5, 0x8E, 0x08);
+    idt_set_gate(38,(void*)irq6, 0x8E, 0x08);
+    idt_set_gate(39,(void*)irq7, 0x8E, 0x08);
+    idt_set_gate(40,(void*)irq8, 0x8E, 0x08);
+    idt_set_gate(41,(void*)irq9, 0x8E, 0x08);
+    idt_set_gate(42,(void*)irq10, 0x8E, 0x08);
+    idt_set_gate(43,(void*)irq11, 0x8E, 0x08);
+    idt_set_gate(44,(void*)irq12, 0x8E, 0x08);
+    idt_set_gate(45,(void*)irq13, 0x8E, 0x08);
+    idt_set_gate(46,(void*)irq14, 0x8E, 0x08);
+    idt_set_gate(47,(void*)irq15, 0x8E, 0x08);
+    
+    irq_remap();
+    
+    for(int i = 48; i < 256; i++)
     {
         idt_set_gate(i,0,0,0);
     }
@@ -143,8 +207,28 @@ void idt_set_gate(size_t num, void* handler, unsigned char attribute, unsigned s
  ****************************************************/
 void fault_handler(struct int_regs *r)
 {
-    printf("Interrupt Number %i\nEIP: %#x\nError Code: %x\nESP: %#x\tEBP: %#x\n",
-                r->int_num, r->EIP, r->err_code, r->ESP, r->EBP);
-    for(;;);
+    if(r->int_num < 32)
+    {
+        printf("Interrupt Number %i\nEIP: %#x\nError Code: %x\nESP: %#x\tEBP: %#x\n",
+                    r->int_num, r->EIP, r->err_code, r->ESP, r->EBP);
+        printf("Segment Selectors:\nCS: %x\tDS: %x\tEFLAGS: %x\n",
+                    r->CS, r->DS, r->EFLAGS);
+        Debug::StackTrace(6);
+        for(;;);
+    }
+    else
+    {
+        void (*handler)(struct int_regs *);
+        handler = (void (*)(struct int_regs *))irq_routines[r->int_num - 32];
+        if(handler)
+        {
+            handler(r);
+        }
+        if(r->int_num > 40)
+        {
+            outportb(0xA0, 0x20);
+        }
+        outportb(0x20, 0x20);
+    }
     return;                             // return to the fault stub to finish the interrupt.
 }

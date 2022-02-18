@@ -27,6 +27,7 @@ i686:
 	kernel/kernel.o arch/arch.o $(CRTEND_OBJ) arch/crtn.o $(LDFLAGS) -L$(LIBDIR) -lc -lgcc
 	$(OBJCOPY) --only-keep-debug $@ $@.dbg
 	hexdump -C $@ >> $@.hex
+	$(OBJDUMP) -d $@ >> $@.dump
 
 .phony: clean
 clean:
@@ -35,9 +36,7 @@ clean:
 	$(MAKE) clean -C kernel
 	$(MAKE) clean -C lib
 	rm -rf i686
-	rm -rf *.map
-	rm -rf *.dbg
-	rm -rf *.hex
+	rm -rf i686.*
 
 .phony: .EXPORT_ALL_VARIABLES
 .EXPORT_ALL_VARIABLES:

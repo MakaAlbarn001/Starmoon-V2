@@ -66,20 +66,7 @@ extern "C" void main() {
     set_basic_gdt();                    // set up a basic gdt
     install_IDT();
     terminal_init();                    // initialize the VGA text terminal
+    __asm__ __volatile__("sti");
     printf("hello\n");                  // print a test message to screen.
-    header_trace();
-    char *temp1 = (char *)malloc(sizeof(char));
-    printf("character temp1: %x\n", temp1);
-    short *temp2 = (short *)malloc(sizeof(short));
-    printf("short temp2: %x\n", temp2);
-    long long *temp3 = (long long*)malloc(sizeof(long long));
-    printf("long long temp3: %x\n", temp3);
-    free(temp1);
-    free(temp2);
-    header_trace();
-    int* temp4 = (int *)malloc(sizeof(int));
-    printf("long long temp 3: %x\n", temp3);
-    printf("int temp 4: %x\n", temp4);
-    header_trace();
     for(;;);                            // begin the idle for loop.
 }

@@ -1,5 +1,22 @@
 .section .text
 
+/************************************
+ * irq macro function:              *
+ *  function:                       *
+ *      Entry point for Interrupt   *
+ * Requests.                        *
+ *  Arguments: None                 *
+ *  Return Type: Void               *
+ ************************************/
+.macro irqs i
+.global irq\i
+irq\i:
+    cli
+    pushl $0
+    pushl $(\i + 32)
+    jmp fault_stub
+.endm
+
 .global isr0
 .global isr1
 .global isr2
@@ -166,6 +183,23 @@ isr31:
     pushl $31
     jmp fault_stub
 
+irqs 0
+irqs 1
+irqs 2
+irqs 3
+irqs 4
+irqs 5
+irqs 6
+irqs 7
+irqs 8
+irqs 9
+irqs 10
+irqs 11
+irqs 12
+irqs 13
+irqs 14
+irqs 15
+
 /************************************************
  * fault_stub():                                *
  *  arguements: none                            *
@@ -211,9 +245,9 @@ fault_stub:
 .type idt_flush, @function
 .extern idtp
 idt_flush:
-    push %ebp
+    push %ebp                   // push the current base pointer
     mov %esp, %ebp              // maintain the stack framm
     lidt (idtp)                 // load the idtp into idtr
     mov %ebp, %esp              // back step the stack frame
-    pop %ebp
+    pop %ebp                    // restore the original base pointer
     ret

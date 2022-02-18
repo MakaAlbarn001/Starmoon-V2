@@ -1,4 +1,5 @@
 #include <kernel/strace.h>
+#include <libc/stdio.h>
 
 namespace Debug {
 
@@ -27,9 +28,11 @@ void StackTrace(size_t Max_Frames)
                         :);
     int i = 0;                          // initialize an iterator to 0
     // so long as the max number of frames have not been traced and we haven't reached the end of the stack
+    printf("Stack Trace:\n");
     while(i < Max_Frames && frame->ebp != NULL)               
     {
         // TODO: Trace the Stack
+        printf("EBP: %x\tEIP: %x\n", frame->ebp, frame->eip);
         frame = frame->ebp;             // move to the next frame of the stack.
         i++;                            // increment the iterator.
     }
